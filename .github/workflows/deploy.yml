@@ -1,0 +1,56 @@
+# Takes effect once this folder is the root of its own repository.
+# Settings → Pages → Source: GitHub Actions. Settings → Secrets and variables → Actions → Variables:
+# VITE_FORM_ENDPOINT (required), VITE_GA_MEASUREMENT_ID, VITE_SITE_URL.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      VITE_FORM_ENDPOINT: ${{ vars.VITE_FORM_ENDPOINT }}
+      VITE_GA_MEASUREMENT_ID: ${{ vars.VITE_GA_MEASUREMENT_ID }}
+      VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
+    steps:
+      - name: Refuse to publish a form that cannot send
+        run: |
+          if [ -z "$VITE_FORM_ENDPOINT" ]; then
+            echo "::error::Set the VITE_FORM_ENDPOINT repository variable first."
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

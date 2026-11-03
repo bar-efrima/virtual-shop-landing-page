@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.ssr/
+.audio-build/
+.venv/
+*.log
+*.tsbuildinfo
+.env
+.env.*
+!.env.example

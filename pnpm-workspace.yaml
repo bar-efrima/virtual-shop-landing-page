@@ -1,0 +1,3 @@
+# Its own root, so it installs alone here and keeps working once it moves to its own repository.
+packages:
+  - .
