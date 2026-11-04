@@ -1,118 +1,169 @@
-/* How the store works in three steps, then the offer: start small with one department. */
+/* What a shopper can do in the store, how it fits the chain, and how to start. */
 import type { MouseEvent } from 'react';
+import { HoverVideo } from './HoverVideo';
 import { Chevron } from './Marks';
 
-const ICONS = {
-  move: 'M12 3v18M3 12h18M12 3L9 6M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3',
-  search: 'M16 16l5 5M18 10.5a7.5 7.5 0 1 1-15 0a7.5 7.5 0 0 1 15 0z',
-  cart: 'M2.5 4H5l2.6 11.5a1.5 1.5 0 0 0 1.5 1.2h8.3a1.5 1.5 0 0 0 1.5-1.2L20.5 8H6M10 20.5h.01M17 20.5h.01',
-};
-
-const STEPS = [
-  { icon: ICONS.move, title: 'משוטטים', text: 'נעים בחופשיות בסופר התלת־ממדי' },
-  { icon: ICONS.search, title: 'מוצאים', text: 'מאתרים בקלות מוצרים ומחלקות' },
-  { icon: ICONS.cart, title: 'אוספים', text: 'מוסיפים לסל במהלך הסיור' },
+const FEATURES = [
+  {
+    clip: 'browse',
+    label: 'נסיעה עם העגלה במעבר בין מדפים מלאים',
+    title: 'משוטטים בין המדפים',
+    text: 'דוחפים עגלה בין המחלקות ובוחרים מוצרים ישירות מהמדף.',
+  },
+  {
+    clip: 'search',
+    label: 'הקלדת שם מוצר בחיפוש, העגלה נוסעת למדף והמוצר מסומן בצהוב',
+    title: 'מחפשים ומגיעים ישר למוצר',
+    text: 'מקלידים שם מוצר, והעגלה מובילה למדף ומסמנת אותו.',
+  },
+  {
+    clip: 'basket',
+    label: 'בחירת משקל של כמה ירקות מהמדף, וכל אחד נוחת בסל',
+    title: 'ממלאים את העגלה',
+    text: 'בוחרים כמות או משקל ורואים את המוצר נכנס לסל.',
+  },
+  {
+    clip: 'deals',
+    label: 'נסיעה לעבר לוח מבצעי השבוע בתוך החנות',
+    title: 'מציגים מבצעים בתוך החנות',
+    text: 'מבליטים מוצרים נבחרים בלוחות מבצעים ובקצות המעברים.',
+  },
 ];
 
-export function Steps() {
+export function Features() {
   return (
-    <section id="how" className="steps wrap" aria-labelledby="steps-title">
-      <h2 id="steps-title" className="steps-title">
-        <span>איך זה עובד?</span>
-      </h2>
-      <ol className="steps-list">
-        {STEPS.map(step => (
-          <li key={step.title} className="reveal">
-            <span className="step-icon">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path
-                  d={step.icon}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-            <div>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
+    <section id="how" className="features wrap" aria-labelledby="features-title">
+      <header className="section-head reveal">
+        <h2 id="features-title">מה אפשר לעשות בחנות?</h2>
+        <p>לא עוד רשימת מוצרים. חנות שנכנסים אליה.</p>
+      </header>
+      <ul className="features-grid">
+        {FEATURES.map(feature => (
+          <li key={feature.title} className="feature reveal" data-hover-play>
+            <div className="feature-media" dir="ltr">
+              <HoverVideo name={feature.clip} label={feature.label} />
+            </div>
+            <div className="feature-body">
+              <h3>{feature.title}</h3>
+              <p>{feature.text}</p>
             </div>
           </li>
         ))}
-      </ol>
+      </ul>
     </section>
   );
 }
 
-function Cubes() {
-  const cube = 'M0-20L17-10V10L0 20L-17 10V-10ZM-17-10L0 0L17-10M0 0V20';
+const STORE_TYPES = ['טבעוני', 'צמחוני', 'ללא חלב', 'ללא בוטנים ואגוזים'];
+
+export function CustomStore() {
   return (
-    <svg className="pilot-cubes" viewBox="0 0 104 92" aria-hidden="true" focusable="false">
-      <g fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round">
-        <path d={cube} transform="translate(32 68)" fill="#f7f5ef" />
-        <path d={cube} transform="translate(72 68)" fill="#f7f5ef" />
-        <path d={cube} transform="translate(52 34)" fill="#a8d03a" />
-      </g>
-    </svg>
+    <section id="custom" className="split wrap" aria-labelledby="custom-title">
+      <div className="split-text reveal">
+        <h2 id="custom-title">סופר מותאם אישית</h2>
+        <p>כל לקוח בוחר את הסופר שמתאים לו, והחנות משתנה בהתאם: על המדפים נשארים המוצרים שמתאימים לבחירה, והמחלקות מתחלפות.</p>
+        <ul className="store-types">
+          {STORE_TYPES.map(type => (
+            <li key={type}>{type}</li>
+          ))}
+        </ul>
+        <p className="split-example">למשל, בסופר הטבעוני מחלקת הבשר מתחלפת בתחליפי בשר.</p>
+        <p className="split-fine">ההתאמה מבוססת על נתוני המוצרים בקטלוג.</p>
+      </div>
+      <div className="split-media reveal" data-hover-play>
+        <div className="feature-media" dir="ltr">
+          <HoverVideo name="diet" label="בחירת סופר טבעוני בחנות, והמעבר למחלקה של תחליפי בשר" />
+        </div>
+      </div>
+    </section>
   );
 }
+
+export function ToCheckout() {
+  return (
+    <section id="checkout" className="split split-flip wrap" aria-labelledby="checkout-title">
+      <div className="split-text reveal">
+        <h2 id="checkout-title">מהעגלה ישירות לעמוד הרכישה באתר שלכם</h2>
+        <p>הלקוח מסיים לקנות בחנות התלת־ממדית, והעגלה עוברת מלאה לעמוד הרכישה באתר של הרשת. הוא משלם אצלכם, כמו בכל קנייה.</p>
+        <p className="split-fine">החיבור לאתר הרשת כפוף לבדיקה טכנית. עמוד הרכישה בסרטון הוא להמחשה.</p>
+      </div>
+      <div className="split-media reveal" data-hover-play>
+        <div className="feature-media" dir="ltr">
+          <HoverVideo name="checkout" label="פתיחת העגלה בחנות, והמעבר להמחשה של עמוד הרכישה באתר הרשת" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const FIT = [
+  {
+    icon: 'M4 7h16M4 12h16M4 17h16M7 4v16M17 4v16',
+    title: 'הקטלוג שלכם',
+    text: 'המוצרים והמחירים של הרשת, על המדפים.',
+  },
+  {
+    icon: 'M4 5h16v9H4zM12 14v6M8 20h8',
+    title: 'המיתוג שלכם',
+    text: 'השם והצבעים של הרשת, על השלטים ובחנות.',
+  },
+];
+
+export function Fit() {
+  return (
+    <section id="fit" className="fit wrap" aria-labelledby="fit-title">
+      <header className="section-head reveal">
+        <h2 id="fit-title">החנות של הרשת שלכם</h2>
+        <p>הלקוחות נכנסים לחנות שלכם, לא לחנות של מישהו אחר.</p>
+      </header>
+      <ul className="fit-list">
+        {FIT.map(item => (
+          <li key={item.title} className="reveal">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d={item.icon}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+const STEPS = ['בוחרים קטגוריה או קמפיין', 'מתאימים את המדפים לקטלוג ולמיתוג שלכם', 'בודקים את החוויה עם הלקוחות שלכם'];
 
 export function Pilot({ onDemo }: { onDemo: (e: MouseEvent<HTMLButtonElement>) => void }) {
   return (
-    <section id="pilot" className="pilot wrap" aria-label="מתחילים במחלקה אחת">
-      <div className="pilot-text only-wide reveal">
-        <h2>מתחילים במחלקה אחת</h2>
-        <p>פיילוט מהיר וממוקד, שמאפשר לראות את החנות שלכם בתלת־⁠ממד ולבדוק היתכנות לפני שמרחיבים.</p>
-        <p>
-          בהמשך, ניתן להרחיב לחנות מלאה ולכלול גם <mark>מתחמים לפי העדפות קנייה</mark> (אופציונלי), כמו טבעוני, צמחוני או
-          ללא חלב.
-        </p>
-      </div>
-      <div className="pilot-card only-narrow reveal">
-        <div>
-          <h2>
-            מתחילים
-            <br />
-            במחלקה אחת
-          </h2>
-          <p>פיילוט מהיר שמדגים את הערך ובודק היתכנות.</p>
+    <div className="pilot-band">
+      <section id="pilot" className="pilot wrap" aria-labelledby="pilot-title">
+        <header className="section-head reveal">
+          <h2 id="pilot-title">מתחילים במחלקה אחת</h2>
+          <p>קודם בודקים בקטן. מרחיבים כשמוכנים.</p>
+        </header>
+        <ol className="pilot-steps reveal">
+          {STEPS.map((step, k) => (
+            <li key={step}>
+              <span>{k + 1}</span>
+              <p>{step}</p>
+            </li>
+          ))}
+        </ol>
+        <div className="pilot-end reveal">
+          <button type="button" className="cta cta-ink" onClick={onDemo}>
+            לתיאום הדגמה
+            <Chevron />
+          </button>
+          <p>החיבור לקופה של הרשת כפוף לבדיקה טכנית.</p>
         </div>
-        <Cubes />
-      </div>
-      <div className="pilot-image reveal">
-        <img
-          src="./media/stills/deals.webp"
-          alt="לוח מבצעי השבוע בתוך החנות התלת־ממדית, כפי שנראה מהעגלה"
-          width={960}
-          height={540}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-      <div className="pilot-row only-narrow reveal">
-        <span className="pilot-row-icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path
-              d="M4 10h16l-1.7 9a1.5 1.5 0 0 1-1.5 1.2H7.2a1.5 1.5 0 0 1-1.5-1.2L4 10zM8 10l3-6M16 10l-3-6M9.5 14v3M14.5 14v3"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
-        <div>
-          <h3>מתחמים לפי העדפות קנייה</h3>
-          <p>בהמשך: מתחמים ללקוחות לפי העדפותיהם, כמו טבעוני, צמחוני או ללא חלב.</p>
-        </div>
-      </div>
-      <button type="button" className="cta cta-ink pilot-cta only-narrow" onClick={onDemo}>
-        לתיאום הדגמה
-        <Chevron />
-      </button>
-    </section>
+      </section>
+    </div>
   );
 }

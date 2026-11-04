@@ -2,7 +2,9 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 
 const LINKS = [
-  { href: '#how', label: 'איך זה עובד?' },
+  { href: '#how', label: 'מה אפשר לעשות בחנות?' },
+  { href: '#custom', label: 'סופר מותאם אישית' },
+  { href: '#checkout', label: 'מהעגלה לעמוד הרכישה' },
   { href: '#pilot', label: 'מתחילים במחלקה אחת' },
 ];
 

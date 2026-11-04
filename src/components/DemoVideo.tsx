@@ -1,15 +1,17 @@
 /*
- * The product video. Nothing is downloaded until the visitor presses play, so the video file
- * doesn't weigh on the page. Pressing play is what starts the sound, so browsers allow it.
+ * The store window: a silent clip from the real store on hover, and on request the full film with sound.
+ * The film downloads only when the visitor presses play, and pressing is what allows the sound.
  */
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MutableRefObject } from 'react';
 import { track } from '../lib/analytics';
 import { media } from '../lib/config';
+import { HoverVideo } from './HoverVideo';
 
 const TITLE = 'סיור בסופרמרקט התלת־ממדי';
 
-export function DemoVideo() {
-  const videoRef = useRef<HTMLVideoElement>(null);
+export function DemoVideo({ playRef }: { playRef: MutableRefObject<(() => void) | null> }) {
+  const filmRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const trackedStart = useRef(false);
   const [started, setStarted] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -23,48 +25,58 @@ export function DemoVideo() {
 
   const play = () => {
     setFailed(false);
-    videoRef.current?.play().catch(() => setFailed(true));
+    filmRef.current?.play().catch(() => setFailed(true));
   };
 
+  useEffect(() => {
+    playRef.current = () => {
+      sectionRef.current?.scrollIntoView({ block: 'center' });
+      play();
+    };
+    return () => {
+      playRef.current = null;
+    };
+  }, [playRef]);
+
   return (
-    <section className="film" aria-label="סרטון הדגמה">
-      <figure className="screen" dir="ltr">
-        <video
-          ref={videoRef}
-          src={media.video}
-          poster={media.poster}
-          preload="none"
-          playsInline
-          controls={started}
-          width={1280}
-          height={720}
-          aria-label={`${TITLE}: נכנסים לחנות, נוסעים עם העגלה בין המעברים, מחפשים מוצר ומגיעים לקופה.`}
-          onPlay={onPlay}
-          onError={() => setFailed(true)}
-        >
-          <track kind="captions" src={media.captions} srcLang="he" label="עברית" />
-        </video>
-        {!started && (
-          <button type="button" className="play" onClick={play} aria-label="הפעלת סרטון ההדגמה">
-            <span>
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
-              </svg>
-            </span>
-          </button>
-        )}
-        {!started && (
-          <div className="screen-bar" aria-hidden="true">
-            <span>0:00 / 1:06</span>
-            <i />
-            <svg viewBox="0 0 24 24" focusable="false">
-              <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5zM15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <svg viewBox="0 0 24 24" focusable="false">
-              <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-        )}
+    <section ref={sectionRef} className="film wrap" aria-label="סרטון הדגמה">
+      <figure className={`window${started ? ' is-playing' : ''}`}>
+        <div className="window-bar" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <span>הסופר שלכם</span>
+        </div>
+        <div className="window-screen" dir="ltr" data-hover-play>
+          <HoverVideo name="hero" phone tap={false} paused={started} label="מעבר ירקות בחנות התלת־ממדית, כפי שנראה מהעגלה" />
+          <video
+            ref={filmRef}
+            className="window-film"
+            src={media.video}
+            preload="none"
+            playsInline
+            controls={started}
+            width={1280}
+            height={720}
+            tabIndex={started ? undefined : -1}
+            aria-hidden={started ? undefined : true}
+            aria-label={`${TITLE}: נכנסים לחנות, בוחרים ירקות, מחפשים מוצר, עוברים לסופר טבעוני וממשיכים לעמוד הרכישה.`}
+            onPlay={onPlay}
+            onError={() => setFailed(true)}
+          >
+            <track kind="captions" src={media.captions} srcLang="he" label="עברית" />
+          </video>
+          {!started && (
+            <button type="button" className="play" onClick={play} aria-label="הפעלת סרטון ההדגמה, עם קול">
+              <span dir="rtl">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
+                </svg>
+                צפו בסיור · 1:00
+              </span>
+            </button>
+          )}
+        </div>
       </figure>
       {failed && (
         <p className="screen-error" role="alert">

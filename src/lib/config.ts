@@ -9,4 +9,6 @@ export const media = {
   video: './media/demo.mp4',
   poster: './media/poster.webp',
   captions: './media/demo.he.vtt',
+  clip: (name: string) => `./media/clips/${name}.mp4`,
+  clipPoster: (name: string) => `./media/clips/${name}.webp`,
 };

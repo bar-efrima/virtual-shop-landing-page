@@ -1,16 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ContactDialog } from './components/ContactDialog';
 import { DemoVideo } from './components/DemoVideo';
-import { Pilot, Steps } from './components/Features';
-import { Chevron, Logo, Sparks, Swoosh } from './components/Marks';
+import { CustomStore, Features, Fit, Pilot, ToCheckout } from './components/Features';
+import { Check, Chevron, Logo, Sparks, Swoosh } from './components/Marks';
 import { Menu } from './components/Menu';
+import { StickyCta } from './components/StickyCta';
 import { track, type CtaLocation } from './lib/analytics';
 import { armReveals } from './lib/motion';
+
+const FACTS = ['במחשב ובנייד', 'הקטלוג והמיתוג שלכם', 'מהעגלה לעמוד הרכישה באתר שלכם'];
 
 export function App() {
   const [formOpen, setFormOpen] = useState(false);
   const closeForm = useCallback(() => setFormOpen(false), []);
   const lastTrigger = useRef<HTMLElement | null>(null);
+  const playFilm = useRef<(() => void) | null>(null);
 
   useEffect(armReveals, []);
 
@@ -34,32 +38,51 @@ export function App() {
 
       <main>
         <section className="hero wrap" aria-labelledby="headline">
-          <div className="hero-text">
-            <h1 id="headline" className="headline">
-              הסופר שלכם,
-              <br />
-              בתלת־ממד.
-            </h1>
-            <Swoosh />
-            <p className="lede">חוויית קנייה וירטואלית בסופר תלת־ממדי, שמקרבת את חוויית הסניף — לכל מסך.</p>
-            <button type="button" className="cta cta-hero" onClick={openForm('hero')}>
+          <h1 id="headline" className="headline">
+            הסופר שלכם,
+            <br />
+            בתלת־ממד.
+          </h1>
+          <Swoosh />
+          <p className="lede">
+            סופרמרקט תלת־ממדי שנפתח ישר מהדפדפן. הלקוחות נעים בין המדפים, מחפשים מוצרים וממלאים עגלה.
+          </p>
+          <div className="hero-actions">
+            <button type="button" className="cta cta-ink" onClick={openForm('hero')}>
               לתיאום הדגמה
               <Chevron />
             </button>
+            <button type="button" className="cta cta-ghost" onClick={() => playFilm.current?.()}>
+              צפו בסיור · 1:00
+            </button>
           </div>
-          <DemoVideo />
+          <ul className="facts">
+            {FACTS.map(fact => (
+              <li key={fact}>
+                <Check />
+                {fact}
+              </li>
+            ))}
+          </ul>
         </section>
-        <Steps />
+        <DemoVideo playRef={playFilm} />
+        <Features />
+        <CustomStore />
+        <ToCheckout />
+        <Fit />
         <Pilot onDemo={openForm('pilot')} />
-        <div className="wrap">
+        <div className="closing-wrap wrap">
           <section className="closing" aria-labelledby="closing-title">
             <h2 id="closing-title" className="reveal">
               <Sparks />
               בואו ניכנס לחנות
             </h2>
-            <button type="button" className="cta" onClick={openForm('closing')}>
-              לתיאום הדגמה
-            </button>
+            <div className="closing-actions reveal">
+              <button type="button" className="cta" onClick={openForm('closing')}>
+                לתיאום הדגמה
+              </button>
+              <span>הדגמה אישית של 15 דקות</span>
+            </div>
           </section>
         </div>
       </main>
@@ -70,10 +93,11 @@ export function App() {
           <p>חנות וירטואלית בתלת־ממד לקמעונאי המזון בישראל</p>
         </div>
         <p className="footer-note">
-          המוצרים והמותגים בסרטון מוצגים להמחשה בלבד, ואין בהם כדי להעיד על שיתוף פעולה עם רשת או יצרן כלשהם.
+          המוצרים והמותגים בסרטון ובתמונות מוצגים להמחשה בלבד, ואין בהם כדי להעיד על שיתוף פעולה עם רשת או יצרן כלשהם.
         </p>
       </footer>
 
+      <StickyCta onDemo={openForm('sticky')} />
       <ContactDialog open={formOpen} onClose={closeForm} returnFocusTo={lastTrigger} />
     </>
   );
