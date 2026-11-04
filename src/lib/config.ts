@@ -5,6 +5,7 @@ export const config = {
 };
 
 export const media = {
+  logo: './media/logo.webp',
   video: './media/demo.mp4',
   poster: './media/poster.webp',
   captions: './media/demo.he.vtt',

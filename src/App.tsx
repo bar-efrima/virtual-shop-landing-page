@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ContactDialog } from './components/ContactDialog';
 import { DemoVideo } from './components/DemoVideo';
-import { Features } from './components/Features';
-import { Cube, Logo } from './components/Marks';
+import { Pilot, Steps } from './components/Features';
+import { Chevron, Logo, Sparks, Swoosh } from './components/Marks';
+import { Menu } from './components/Menu';
 import { track, type CtaLocation } from './lib/analytics';
 import { armReveals } from './lib/motion';
 
@@ -21,44 +22,56 @@ export function App() {
 
   return (
     <>
-      <div className="hero-band">
-        <Cube className="float-cube float-cube-1" />
-        <Cube className="float-cube float-cube-2" />
-        <Cube className="float-cube float-cube-3" />
-        <header className="hero wrap">
-          <div className="brand">
-            <Logo />
-            <span dir="ltr">Virtual-Shop</span>
-          </div>
-          <h1 className="headline">
-            הסופר שלכם,
-            <br />
-            חוויית קנייה ייחודית
-          </h1>
-          <p className="lede">סופרמרקט תלת־ממדי לרשתות מזון, שנכנסים אליו ישר מהדפדפן.</p>
-          <button type="button" className="cta" onClick={openForm('hero')}>
+      <div className="site-header-line">
+        <header className="site-header wrap">
+          <Logo />
+          <button type="button" className="cta cta-small" onClick={openForm('header')}>
             לתיאום הדגמה
           </button>
+          <Menu onDemo={openForm('menu')} />
         </header>
       </div>
 
       <main>
-        <DemoVideo />
-        <Features />
-        <section className="closing" aria-labelledby="closing-title">
-          <div className="wrap">
+        <section className="hero wrap" aria-labelledby="headline">
+          <div className="hero-text">
+            <h1 id="headline" className="headline">
+              הסופר שלכם,
+              <br />
+              בתלת־ממד.
+            </h1>
+            <Swoosh />
+            <p className="lede">חוויית קנייה וירטואלית בסופר תלת־ממדי, שמקרבת את חוויית הסניף — לכל מסך.</p>
+            <button type="button" className="cta cta-hero" onClick={openForm('hero')}>
+              לתיאום הדגמה
+              <Chevron />
+            </button>
+          </div>
+          <DemoVideo />
+        </section>
+        <Steps />
+        <Pilot onDemo={openForm('pilot')} />
+        <div className="wrap">
+          <section className="closing" aria-labelledby="closing-title">
             <h2 id="closing-title" className="reveal">
-              בואו נראה לכם את החנות
+              <Sparks />
+              בואו ניכנס לחנות
             </h2>
             <button type="button" className="cta" onClick={openForm('closing')}>
               לתיאום הדגמה
             </button>
-          </div>
-        </section>
+          </section>
+        </div>
       </main>
 
       <footer className="footer wrap">
-        <p>המוצרים והמותגים בסרטון מוצגים להמחשה בלבד, ואין בהם כדי להעיד על שיתוף פעולה עם רשת או יצרן כלשהם.</p>
+        <div className="footer-brand">
+          <Logo />
+          <p>חנות וירטואלית בתלת־ממד לקמעונאי המזון בישראל</p>
+        </div>
+        <p className="footer-note">
+          המוצרים והמותגים בסרטון מוצגים להמחשה בלבד, ואין בהם כדי להעיד על שיתוף פעולה עם רשת או יצרן כלשהם.
+        </p>
       </footer>
 
       <ContactDialog open={formOpen} onClose={closeForm} returnFocusTo={lastTrigger} />

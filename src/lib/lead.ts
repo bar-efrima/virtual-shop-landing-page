@@ -22,10 +22,10 @@ export type LeadErrors = Partial<Record<keyof LeadFields, string>>;
 export function validateLead(lead: LeadFields): LeadErrors {
   const errors: LeadErrors = {};
   if (lead.name.trim().length < 2) errors.name = 'נא להזין שם מלא';
-  if (!lead.email.trim()) errors.email = 'נא להזין אימייל בעבודה';
+  if (!lead.email.trim()) errors.email = 'נא להזין מייל עבודה';
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(lead.email.trim()))
-    errors.email = 'כתובת האימייל לא תקינה. לדוגמה: name@company.co.il';
-  if (!lead.company.trim()) errors.company = 'נא להזין את שם החברה';
+    errors.email = 'כתובת המייל לא תקינה. לדוגמה: name@company.co.il';
+  if (!lead.company.trim()) errors.company = 'נא להזין שם של רשת או חברה';
   if (lead.message.length > MESSAGE_MAX) errors.message = `ההודעה ארוכה מדי. עד ${MESSAGE_MAX} תווים`;
   return errors;
 }

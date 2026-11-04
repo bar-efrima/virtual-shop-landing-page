@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-export type CtaLocation = 'hero' | 'closing';
+export type CtaLocation = 'header' | 'menu' | 'hero' | 'pilot' | 'closing';
 
 type AnalyticsEvent =
   | { name: 'video_start'; params: { video_title: string } }

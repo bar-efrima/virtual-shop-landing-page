@@ -1,30 +1,37 @@
-/* The product's marks, from its logo: a cart with a cube in the basket. Decorative: the name is always written next to them. */
-export function Cube({ className = '' }: { className?: string }) {
+/* The logo and the small hand-drawn marks around the headings. */
+import { media } from '../lib/config';
+
+export function Logo() {
+  return <img className="logo" src={media.logo} alt="Virtual-Shop" width={960} height={191} />;
+}
+
+export function Swoosh() {
   return (
-    <svg className={`cube ${className}`} viewBox="26 10 18 20" aria-hidden="true" focusable="false">
-      <path d="M35 10 L44 15 L35 20 L26 15 Z" fill="#ffcf5c" />
-      <path d="M26 15 L35 20 V30 L26 25 Z" fill="#f2a42b" />
-      <path d="M35 20 L44 15 V25 L35 30 Z" fill="#d9821c" />
+    <svg className="swoosh" viewBox="0 0 320 16" aria-hidden="true" focusable="false">
+      <path d="M4 13C90 5 230 2 316 6" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
     </svg>
   );
 }
 
-export function Logo() {
+export function Sparks() {
   return (
-    <svg className="logo" viewBox="8 8 46 46" aria-hidden="true" focusable="false">
-      <path d="M35 10 L44 15 L35 20 L26 15 Z" fill="#ffcf5c" />
-      <path d="M26 15 L35 20 V30 L26 25 Z" fill="#f2a42b" />
-      <path d="M35 20 L44 15 V25 L35 30 Z" fill="#d9821c" />
+    <svg className="sparks" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+      <path d="M26 4l6 11M9 11l11 8M4 29l13-1" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function Chevron() {
+  return (
+    <svg className="chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path
-        d="M10 25.5 H15.5 L21.5 44 H47 L51.5 31 H17.3"
+        d="M15 5l-7 7 7 7"
         fill="none"
         stroke="currentColor"
-        strokeWidth="3.4"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="24.5" cy="50.5" r="3.1" fill="currentColor" />
-      <circle cx="43.5" cy="50.5" r="3.1" fill="currentColor" />
     </svg>
   );
 }

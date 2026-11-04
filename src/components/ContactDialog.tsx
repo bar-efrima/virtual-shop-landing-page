@@ -6,6 +6,7 @@ import { useEffect, useId, useRef, useState, type FormEvent, type RefObject } fr
 import { track } from '../lib/analytics';
 import { getAttribution } from '../lib/attribution';
 import { config } from '../lib/config';
+import { Chevron } from './Marks';
 import { emptyLead, MESSAGE_MAX, submitLead, validateLead, type LeadErrors, type LeadFields } from '../lib/lead';
 
 type Status = 'idle' | 'sending' | 'sent' | 'failed';
@@ -143,28 +144,42 @@ export function ContactDialog({ open, onClose, returnFocusTo }: Props) {
         ) : (
           <form ref={formRef} onSubmit={submit} noValidate aria-busy={sending}>
             <h2 id={`${id}-title`}>לתיאום הדגמה</h2>
-            <p className="contact-lede">נשמח להראות לכם את החנות. נחזור אליכם כדי לקבוע מועד.</p>
+            <p className="contact-lede">השאירו פרטים ונחזור אליכם לתיאום הדגמה מותאמת לרשת או לחברה שלכם.</p>
 
             <div className="field">
               <label htmlFor={`${id}-name`}>שם מלא</label>
-              <input {...field('name')} type="text" autoComplete="name" required data-autofocus />
+              <input {...field('name')} type="text" autoComplete="name" placeholder="הכניסו שם מלא" required data-autofocus />
               {fieldError('name')}
             </div>
             <div className="field">
-              <label htmlFor={`${id}-email`}>אימייל בעבודה</label>
-              <input {...field('email')} type="email" autoComplete="email" inputMode="email" dir="ltr" required />
+              <label htmlFor={`${id}-email`}>מייל עבודה</label>
+              <input
+                {...field('email')}
+                type="email"
+                autoComplete="email"
+                inputMode="email"
+                dir="ltr"
+                placeholder="הכניסו מייל עבודה"
+                required
+              />
               {fieldError('email')}
             </div>
             <div className="field">
-              <label htmlFor={`${id}-company`}>חברה</label>
-              <input {...field('company')} type="text" autoComplete="organization" required />
+              <label htmlFor={`${id}-company`}>רשת או חברה</label>
+              <input
+                {...field('company')}
+                type="text"
+                autoComplete="organization"
+                placeholder="לדוגמה: רשת קמעונאית"
+                required
+              />
               {fieldError('company')}
             </div>
             <div className="field">
               <label htmlFor={`${id}-message`}>
-                הודעה <span className="field-optional">(לא חובה)</span>
+                הודעה <span className="field-optional">(רשות)</span>
               </label>
-              <textarea {...field('message')} rows={3} maxLength={MESSAGE_MAX} />
+              <textarea {...field('message')} rows={3} maxLength={MESSAGE_MAX} placeholder="הוסיפו פרטים או שאלה" />
               {fieldError('message')}
             </div>
 
@@ -186,7 +201,8 @@ export function ContactDialog({ open, onClose, returnFocusTo }: Props) {
             )}
 
             <button type="submit" className="cta cta-ink contact-submit" aria-disabled={sending}>
-              {sending ? 'שולחים…' : status === 'failed' ? 'ניסיון נוסף' : 'שליחה'}
+              {sending ? 'שולחים…' : status === 'failed' ? 'ניסיון נוסף' : 'שליחת בקשה'}
+              {!sending && <Chevron />}
             </button>
             <p className="contact-fineprint">הפרטים ישמשו ליצירת קשר בנוגע להדגמה.</p>
           </form>

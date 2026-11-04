@@ -27,7 +27,7 @@ export function DemoVideo() {
   };
 
   return (
-    <section className="film wrap" aria-label="סרטון הדגמה">
+    <section className="film" aria-label="סרטון הדגמה">
       <figure className="screen" dir="ltr">
         <video
           ref={videoRef}
@@ -46,13 +46,24 @@ export function DemoVideo() {
         </video>
         {!started && (
           <button type="button" className="play" onClick={play} aria-label="הפעלת סרטון ההדגמה">
-            <span dir="rtl">
+            <span>
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
               </svg>
-              צפו בסיור בחנות
             </span>
           </button>
+        )}
+        {!started && (
+          <div className="screen-bar" aria-hidden="true">
+            <span>0:00 / 1:06</span>
+            <i />
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5zM15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
         )}
       </figure>
       {failed && (
