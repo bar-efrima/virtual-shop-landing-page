@@ -1,7 +1,5 @@
 /* What a shopper can do in the store, how it fits the chain, and how to start. */
-import type { MouseEvent } from 'react';
 import { HoverVideo } from './HoverVideo';
-import { Chevron } from './Marks';
 
 const FEATURES = [
   {
@@ -35,7 +33,7 @@ export function Features() {
     <section id="how" className="features wrap" aria-labelledby="features-title">
       <header className="section-head reveal">
         <h2 id="features-title">מה אפשר לעשות בחנות?</h2>
-        <p>לא עוד רשימת מוצרים. חנות שנכנסים אליה.</p>
+        <p>מסתובבים בין המדפים, מוצאים את מה שצריך ומגלים מוצרים בדרך.</p>
       </header>
       <ul className="features-grid">
         {FEATURES.map(feature => (
@@ -54,21 +52,20 @@ export function Features() {
   );
 }
 
-const STORE_TYPES = ['טבעוני', 'צמחוני', 'ללא חלב', 'ללא בוטנים ואגוזים'];
+const STORE_TYPES = ['טבעוני', 'צמחוני', 'אלרגיות (חלב, בוטנים ואגוזים)'];
 
 export function CustomStore() {
   return (
     <section id="custom" className="split wrap" aria-labelledby="custom-title">
       <div className="split-text reveal">
+        <span className="split-badge">אפשרות להרחבה</span>
         <h2 id="custom-title">סופר מותאם אישית</h2>
-        <p>כל לקוח בוחר את הסופר שמתאים לו, והחנות משתנה בהתאם: על המדפים נשארים המוצרים שמתאימים לבחירה, והמחלקות מתחלפות.</p>
+        <p>בוחרים העדפת קנייה, והחנות מציגה מוצרים מתאימים מתוך הקטלוג. למשל, במתחם טבעוני, מחלקת הבשר מתחלפת בתחליפי בשר.</p>
         <ul className="store-types">
           {STORE_TYPES.map(type => (
             <li key={type}>{type}</li>
           ))}
         </ul>
-        <p className="split-example">למשל, בסופר הטבעוני מחלקת הבשר מתחלפת בתחליפי בשר.</p>
-        <p className="split-fine">ההתאמה מבוססת על נתוני המוצרים בקטלוג.</p>
       </div>
       <div className="split-media reveal" data-hover-play>
         <div className="feature-media" dir="ltr">
@@ -83,9 +80,9 @@ export function ToCheckout() {
   return (
     <section id="checkout" className="split split-flip wrap" aria-labelledby="checkout-title">
       <div className="split-text reveal">
-        <h2 id="checkout-title">מהעגלה ישירות לעמוד הרכישה באתר שלכם</h2>
-        <p>הלקוח מסיים לקנות בחנות התלת־ממדית, והעגלה עוברת מלאה לעמוד הרכישה באתר של הרשת. הוא משלם אצלכם, כמו בכל קנייה.</p>
-        <p className="split-fine">החיבור לאתר הרשת כפוף לבדיקה טכנית. עמוד הרכישה בסרטון הוא להמחשה.</p>
+        <h2 id="checkout-title">מחברים את הסל לחנות האונליין שלכם</h2>
+        <p>במסגרת הפיילוט נבדוק כיצד להעביר את המוצרים שנבחרו לעגלת הרשת, ולהמשיך לתשלום באתר שלכם.</p>
+        <p className="split-fine">עמוד הרכישה בסרטון הוא להמחשה.</p>
       </div>
       <div className="split-media reveal" data-hover-play>
         <div className="feature-media" dir="ltr">
@@ -114,7 +111,7 @@ export function Fit() {
     <section id="fit" className="fit wrap" aria-labelledby="fit-title">
       <header className="section-head reveal">
         <h2 id="fit-title">החנות של הרשת שלכם</h2>
-        <p>הלקוחות נכנסים לחנות שלכם, לא לחנות של מישהו אחר.</p>
+        <p>הקטלוג, המחירים והמיתוג של הרשת שלכם, בתוך חוויית קנייה תלת־ממדית.</p>
       </header>
       <ul className="fit-list">
         {FIT.map(item => (
@@ -140,7 +137,7 @@ export function Fit() {
 
 const STEPS = ['בוחרים קטגוריה או קמפיין', 'מתאימים את המדפים לקטלוג ולמיתוג שלכם', 'בודקים את החוויה עם הלקוחות שלכם'];
 
-export function Pilot({ onDemo }: { onDemo: (e: MouseEvent<HTMLButtonElement>) => void }) {
+export function Pilot() {
   return (
     <div className="pilot-band">
       <section id="pilot" className="pilot wrap" aria-labelledby="pilot-title">
@@ -156,13 +153,6 @@ export function Pilot({ onDemo }: { onDemo: (e: MouseEvent<HTMLButtonElement>) =
             </li>
           ))}
         </ol>
-        <div className="pilot-end reveal">
-          <button type="button" className="cta cta-ink" onClick={onDemo}>
-            לתיאום הדגמה
-            <Chevron />
-          </button>
-          <p>החיבור לקופה של הרשת כפוף לבדיקה טכנית.</p>
-        </div>
       </section>
     </div>
   );

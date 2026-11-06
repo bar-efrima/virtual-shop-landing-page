@@ -494,6 +494,21 @@ li.reveal:nth-child(4) {
 .split-flip .split-text {
   order: 1;
 }
+/* the cards above already set it apart, so a smaller gap is enough */
+.features + .split {
+  padding-top: clamp(40px, 5.5vw, 72px);
+}
+.split-badge {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 3px 12px;
+  border-radius: 8px;
+  background: var(--lime-soft);
+  box-shadow: inset 0 0 0 1px rgb(15 48 33 / 0.18);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
 .split h2 {
   font-size: clamp(2rem, 3.8vw, 3rem);
   font-weight: 800;
@@ -577,7 +592,7 @@ li.reveal:nth-child(4) {
   background: var(--lime-soft);
 }
 .pilot {
-  padding-block: var(--section);
+  padding-block: var(--section) clamp(48px, 6.5vw, 88px);
 }
 .pilot-steps {
   position: relative;
@@ -625,22 +640,13 @@ li.reveal:nth-child(4) {
   font-weight: 600;
   line-height: 1.4;
 }
-.pilot-end {
-  margin-top: clamp(32px, 4vw, 52px);
-  text-align: center;
-}
-.pilot-end p {
-  margin-top: 14px;
-  color: var(--ink-soft);
-  font-size: 0.9375rem;
-}
 
 /* ---------- closing ---------- */
 .closing-wrap {
   padding-top: clamp(16px, 2.2vw, 28px);
 }
 .closing {
-  padding: clamp(52px, 8vw, 104px) 20px;
+  padding: clamp(32px, 4.5vw, 56px) 20px;
   border-radius: var(--radius);
   background:
     radial-gradient(70% 120% at 50% 0%, rgb(188 220 69 / 0.16), transparent 70%),
@@ -653,7 +659,7 @@ li.reveal:nth-child(4) {
   align-items: flex-start;
   justify-content: center;
   gap: 10px;
-  font-size: clamp(2.375rem, 6vw, 4.75rem);
+  font-size: clamp(2.125rem, 4.6vw, 3.5rem);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -671,7 +677,7 @@ li.reveal:nth-child(4) {
   align-items: center;
   justify-content: center;
   gap: 12px 20px;
-  margin-top: clamp(22px, 3vw, 34px);
+  margin-top: clamp(16px, 2.2vw, 24px);
 }
 .closing-actions span {
   color: var(--lime);
@@ -1054,9 +1060,6 @@ li.reveal:nth-child(4) {
   }
   .fit-list p {
     margin-top: 2px;
-  }
-  .pilot-end .cta {
-    width: 100%;
   }
 
   .closing-actions {

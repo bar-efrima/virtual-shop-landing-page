@@ -8,7 +8,7 @@ import { StickyCta } from './components/StickyCta';
 import { track, type CtaLocation } from './lib/analytics';
 import { armReveals } from './lib/motion';
 
-const FACTS = ['במחשב ובנייד', 'הקטלוג והמיתוג שלכם', 'מהעגלה לעמוד הרכישה באתר שלכם'];
+const FACTS = ['במחשב ובנייד', 'הקטלוג והמיתוג שלכם'];
 
 export function App() {
   const [formOpen, setFormOpen] = useState(false);
@@ -45,7 +45,7 @@ export function App() {
           </h1>
           <Swoosh />
           <p className="lede">
-            סופרמרקט תלת־ממדי שנפתח ישר מהדפדפן. הלקוחות נעים בין המדפים, מחפשים מוצרים וממלאים עגלה.
+            דרך חדשה לחוות קניות אונליין. מסתובבים בסופר, מגלים מוצרים על המדפים וממלאים עגלה, ישירות מהדפדפן.
           </p>
           <div className="hero-actions">
             <button type="button" className="cta cta-ink" onClick={openForm('hero')}>
@@ -70,7 +70,7 @@ export function App() {
         <CustomStore />
         <ToCheckout />
         <Fit />
-        <Pilot onDemo={openForm('pilot')} />
+        <Pilot />
         <div className="closing-wrap wrap">
           <section className="closing" aria-labelledby="closing-title">
             <h2 id="closing-title" className="reveal">
