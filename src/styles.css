@@ -115,9 +115,22 @@ video {
     transform 0.25s var(--ease),
     box-shadow 0.25s;
 }
-.cta:hover {
-  background: var(--lime-hover);
-  transform: translateY(-2px);
+/* hover effects only where there's a mouse: on touch they'd stay stuck after a tap */
+@media (hover: hover) {
+  .cta:hover {
+    background: var(--lime-hover);
+    transform: translateY(-2px);
+  }
+  .cta-ink:hover {
+    background: #1b4a35;
+    box-shadow: 0 18px 32px -14px rgb(15 48 33 / 0.8);
+  }
+  .cta-ghost:hover {
+    background: rgb(15 48 33 / 0.06);
+  }
+  .cta:hover .chevron {
+    transform: translateX(-4px);
+  }
 }
 .cta:active {
   transform: translateY(0);
@@ -132,26 +145,15 @@ video {
   color: #fff;
   box-shadow: 0 14px 28px -16px rgb(15 48 33 / 0.8);
 }
-.cta-ink:hover {
-  background: #1b4a35;
-  box-shadow: 0 18px 32px -14px rgb(15 48 33 / 0.8);
-}
 .cta-ghost {
   background: transparent;
   box-shadow: inset 0 0 0 1.5px var(--ink);
-}
-.cta-ghost:hover {
-  background: rgb(15 48 33 / 0.06);
 }
 .chevron {
   width: 20px;
   height: 20px;
   transition: transform 0.25s var(--ease);
 }
-.cta:hover .chevron {
-  transform: translateX(-4px);
-}
-
 /* ---------- header ---------- */
 .site-header-line {
   position: sticky;
@@ -1084,31 +1086,47 @@ li.reveal:nth-child(4) {
     border-radius: 20px;
   }
 
-  /* the demo button that stays within reach, once the hero's has scrolled away */
+  /*
+   * The demo button that stays within reach once the hero's has scrolled away. It floats on its
+   * own: no strip behind it to wash out the page, and its own compositing layer so it doesn't
+   * jitter while the phone's toolbar shows and hides.
+   */
   .sticky-cta {
     position: fixed;
-    inset-inline: 0;
-    bottom: 0;
+    inset-inline: 16px;
+    bottom: max(14px, env(safe-area-inset-bottom));
     z-index: 15;
     display: block;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-    background: linear-gradient(to top, var(--bg) 62%, rgb(247 245 239 / 0));
+    pointer-events: none;
     visibility: hidden;
     opacity: 0;
-    transform: translateY(100%);
+    transform: translate3d(0, calc(100% + 24px), 0);
+    will-change: transform, opacity;
     transition:
       transform 0.35s var(--ease),
       opacity 0.25s,
-      visibility 0.35s;
+      visibility 0s 0.35s;
   }
   .sticky-cta.is-shown {
+    pointer-events: auto;
     visibility: visible;
     opacity: 1;
-    transform: none;
+    transform: translate3d(0, 0, 0);
+    transition:
+      transform 0.35s var(--ease),
+      opacity 0.25s,
+      visibility 0s;
   }
   .sticky-cta .cta {
     width: 100%;
     min-height: 52px;
+    box-shadow:
+      0 10px 26px -8px rgb(15 48 33 / 0.55),
+      0 2px 6px rgb(15 48 33 / 0.18);
+  }
+  .sticky-cta .cta:hover,
+  .sticky-cta .cta:active {
+    transform: none;
   }
 }
 @media (max-height: 500px) and (max-width: 950px) {
