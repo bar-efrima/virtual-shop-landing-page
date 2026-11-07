@@ -69,7 +69,7 @@ export function CustomStore() {
       </div>
       <div className="split-media reveal" data-hover-play>
         <div className="feature-media" dir="ltr">
-          <HoverVideo name="diet" label="בחירת סופר טבעוני בחנות, והמעבר למחלקה של תחליפי בשר" />
+          <HoverVideo name="diet" label="בחירת סופר טבעוני: החנות מקבלת מסגרת ותג בצבע שלו, ומחלקת הבשר מתחלפת בתחליפי בשר" />
         </div>
       </div>
     </section>
