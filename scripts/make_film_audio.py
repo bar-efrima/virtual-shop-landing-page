@@ -1,12 +1,15 @@
-"""Builds the film's narration, music and captions, and replaces public/media/demo.mp4's sound.
+"""Builds the film's sound and captions from recorded narration, and replaces public/media/demo.mp4's sound.
 
-The picture is kept as it is. To change the words, edit LINES; a line must end before the next starts.
-Delete .audio-build/ after changing the words or the voice, or the old lines are reused.
+The picture is kept as it is. The narration is one recording per line, made in ElevenLabs with the
+voice "Itamar - Israeli Hebrew Narrator" (Eleven v3) on a paid plan, so it may be used commercially.
+Put them in .audio-build/voice/ as line1.mp3, line2.mp3 and so on, in the order of LINES. Each line
+starts at its time below and must end before the next one starts. The film opens with three seconds
+of logo before the first line. The music is the track in .audio-build/music-source.m4a ("Confident
+Launch"); check that its licence allows commercial use.
 
-    python -m venv .venv && .venv/Scripts/python -m pip install edge-tts numpy
-    .venv/Scripts/python scripts/make_film_audio.py he-IL-HilaNeural   (or he-IL-AvriNeural)
+    python -m venv .venv && .venv/Scripts/python -m pip install numpy
+    .venv/Scripts/python scripts/make_film_audio.py
 """
-import asyncio
 import json
 import shutil
 import subprocess
@@ -14,7 +17,6 @@ import sys
 import wave
 from pathlib import Path
 
-import edge_tts
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -22,19 +24,20 @@ OUT = ROOT / ".audio-build"
 OUT.mkdir(exist_ok=True)
 MEDIA = ROOT / "public/media"
 PICTURE = MEDIA / "demo.mp4"
-VOICE = sys.argv[1] if len(sys.argv) > 1 else "he-IL-HilaNeural"
-DURATION = 60.0
+VOICE = OUT / "voice"
+DURATION = 63.0
+# the music: a 60-second track, stretched slightly to the film's length
+MUSIC = OUT / "music-source.m4a"
 
-# start (s), what is spoken, what the captions show, speaking-rate adjustment
+# start (s), the captions (what the recording says)
 LINES = [
-    (0.6, "וירצ'ואל שופ. הסופר שלכם, בתלת ממד.", "Virtual-Shop. הסופר שלכם, בתלת־ממד.", "+0%"),
-    (6.2, "הלקוחות נכנסים לחנות ישר מהדפדפן, וכבר בכניסה מחכים המבצעים.", "הלקוחות נכנסים לחנות ישר מהדפדפן, וכבר בכניסה מחכים המבצעים.", "+0%"),
-    (12.4, "מעברים ומדפים, כמו בסניף.", "מעברים ומדפים, כמו בסניף.", "+0%"),
-    (16.2, "בוחרים ירקות מהמדף, לפי כמות או משקל, ורואים כל מוצר נוחת בסל.", "בוחרים ירקות מהמדף, לפי כמות או משקל, ורואים כל מוצר נוחת בסל.", "+0%"),
-    (25.5, "מחפשים מוצר? מקלידים את השם, והעגלה נוסעת אליו ומסמנת אותו על המדף.", "מחפשים מוצר? מקלידים את השם, והעגלה נוסעת אליו ומסמנת אותו על המדף.", "+0%"),
-    (34.5, "ויש גם סופר מותאם אישית: טבעוני, צמחוני, ללא חלב, או ללא בוטנים ואגוזים. הלקוח בוחר, והחנות משתנה בהתאם.", "ויש גם סופר מותאם אישית: טבעוני, צמחוני, ללא חלב, או ללא בוטנים ואגוזים. הלקוח בוחר, והחנות משתנה בהתאם.", "+0%"),
-    (46.2, "ומהעגלה עוברים ישירות לעמוד הרכישה באתר שלכם. החיבור כפוף לבדיקה טכנית.", "ומהעגלה עוברים ישירות לעמוד הרכישה באתר שלכם. החיבור כפוף לבדיקה טכנית.", "+0%"),
-    (54.8, "וירצ'ואל שופ. בואו נראה לכם את החנות.", "Virtual-Shop. בואו נראה לכם את החנות.", "+0%"),
+    (3.3, "הלקוחות שלכם נכנסים לסופר, גם כשהם קונים אונליין. הכירו את Virtual-Shop."),
+    (9.3, "חוויית קנייה שמזמינה לשוטט בין המדפים, לגלות מוצרים ולבחור מה להוסיף לעגלה."),
+    (17.6, "אפשר גם ליצור חנות לפי העדפות קנייה. למשל, חנות טבעונית שמציגה מוצרים מתאימים מתוך הקטלוג שלכם, עם מחלקות שמשתנות בהתאם."),
+    (29.3, "המבצעים והמוצרים שחשובים לכם מקבלים מקום בולט בחנות, בלוחות מבצעים ובתצוגות לאורך מסלול הקנייה."),
+    (38.4, "וכשהלקוח יודע מה הוא צריך, החיפוש מוביל אותו ישר למדף ולמוצר."),
+    (46.3, "החוויה מותאמת לקטלוג ולמיתוג שלכם. במסגרת הפיילוט נבחן גם את החיבור לעגלת האונליין של הרשת."),
+    (55.6, "מתחילים בפיילוט ממוקד בקטגוריה אחת. בואו נראה איך זה יכול לעבוד ברשת שלכם."),
 ]
 
 
@@ -50,21 +53,11 @@ def seconds(path):
     return float(out.stdout)
 
 
-async def speak():
-    for i, (_, text, _, rate) in enumerate(LINES):
-        path = OUT / f"line{i:02d}.mp3"
-        if path.exists() and path.stat().st_size > 0:
-            continue
-        for attempt in range(5):
-            try:
-                await asyncio.wait_for(edge_tts.Communicate(text, VOICE, rate=rate).save(str(path)), timeout=30)
-                if path.stat().st_size > 0:
-                    break
-            except Exception as e:
-                print("retry", i, attempt, type(e).__name__, flush=True)
-            await asyncio.sleep(3 * (attempt + 1))
-        else:
-            raise SystemExit(f"line {i} could not be generated")
+def voice_file(i):
+    path = VOICE / f"line{i + 1}.mp3"
+    if not path.exists():
+        raise SystemExit(f"missing {path}")
+    return path
 
 
 def make_music(path, length=DURATION, sr=44100):
@@ -136,12 +129,11 @@ def vtt_time(s):
     return f"00:{int(m):02d}:{sec:06.3f}"
 
 
-asyncio.run(speak())
 
 timing = []
 ok = True
-for i, (start, _, caption, _) in enumerate(LINES):
-    length = seconds(OUT / f"line{i:02d}.mp3")
+for i, (start, caption) in enumerate(LINES):
+    length = seconds(voice_file(i))
     end = start + length
     limit = LINES[i + 1][0] if i + 1 < len(LINES) else DURATION
     fits = end <= limit - 0.1
@@ -154,21 +146,28 @@ if not ok:
 
 # captions
 vtt = ["WEBVTT", ""]
-for t, (_, _, caption, _) in zip(timing, LINES):
+for t, (_, caption) in zip(timing, LINES):
     vtt += [f"{vtt_time(t['start'])} --> {vtt_time(t['end'])}", caption, ""]
 (OUT / "demo.he.vtt").write_text("\n".join(vtt), encoding="utf-8")
 
 # the voice track: every line at its own moment
 inputs = []
 delays = []
-for i, (start, *_ ) in enumerate(LINES):
-    inputs += ["-i", str(OUT / f"line{i:02d}.mp3")]
+for i, (start, _) in enumerate(LINES):
+    inputs += ["-i", str(voice_file(i))]
     delays.append(f"[{i}:a]aresample=44100,aformat=channel_layouts=stereo,adelay={int(start * 1000)}:all=1[a{i}]")
 mix = "".join(f"[a{i}]" for i in range(len(LINES)))
 graph = ";".join(delays) + f";{mix}amix=inputs={len(LINES)}:normalize=0,apad,atrim=0:{DURATION}[v]"
 run(*inputs, "-filter_complex", graph, "-map", "[v]", str(OUT / "voice.wav"))
 
-make_music(OUT / "music.wav")
+if MUSIC.exists():
+    src_len = seconds(MUSIC)
+    run("-i", str(MUSIC), "-af",
+        f"atempo={src_len / DURATION:.5f},afade=t=in:st=0:d=0.3,afade=t=out:st={DURATION - 2.5}:d=2.5,"
+        f"aresample=44100,aformat=channel_layouts=stereo,apad,atrim=0:{DURATION}",
+        str(OUT / "music.wav"))
+else:
+    make_music(OUT / "music.wav")
 
 # the music sits low and dips further under the voice
 def mean_db(path, seek=None, length=None):
@@ -181,8 +180,8 @@ def mean_db(path, seek=None, length=None):
 
 
 # fixed gains, no dynamic levelling: speech near -18 dB, music about 15 dB below it, less under speech
-voice_gain = -18 - mean_db(OUT / "voice.wav", 21.6, 4.8)
-music_gain = -33 - mean_db(OUT / "music.wav", 10, 40)
+voice_gain = -18 - mean_db(OUT / "voice.wav", 9.5, 5)
+music_gain = -30 - mean_db(OUT / "music.wav", 10, 40)
 print("gains", round(voice_gain, 1), round(music_gain, 1))
 graph = (
     f"[0:a]volume={voice_gain}dB,asplit=2[voice][key];"

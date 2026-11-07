@@ -53,7 +53,7 @@ export function App() {
               <Chevron />
             </button>
             <button type="button" className="cta cta-ghost" onClick={() => playFilm.current?.()}>
-              צפו בסיור · 1:00
+              צפו בסיור · 1:03
             </button>
           </div>
           <ul className="facts">
